@@ -7,7 +7,7 @@ class Pedido(models.Model):
     presupuesto = models.FloatField()
     fecha_llegada_materiales = models.DateField()
     fecha_entrega = models.DateField()
-    ruta_plano = models.CharField(max_length=255)
+    ruta_plano = models.CharField(max_length=255, null=True, blank=True)
     notas = models.TextField()
 
     def __str__(self):

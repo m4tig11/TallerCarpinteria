@@ -2,9 +2,10 @@ from PyQt5.QtWidgets import QMainWindow, QFileDialog, QLabel
 from PyQt5.QtCore import QDate, pyqtSignal
 from PyQt5.QtGui import QPixmap
 from ui.ventana_pedido import Ui_MainWindow
-from db.database import Database
+from services.api_service import ApiService
 import os
-import shutil
+import requests
+from io import BytesIO
 
 class PedidoController(QMainWindow):
     # Agregar señal de actualización
@@ -16,124 +17,95 @@ class PedidoController(QMainWindow):
         self.ui.setupUi(self)
         self.pedido_id = pedido_id
         
-        # Crear directorio para imágenes si no existe
-        self.img_dir = "imagenes/planos"
-        os.makedirs(self.img_dir, exist_ok=True)
-        
         # Conectar botones
         self.ui.pushButton_3.clicked.connect(self.guardar_cambios)
         self.ui.pushButton.clicked.connect(self.ver_plano)      # Botón Ver
         self.ui.pushButton_2.clicked.connect(self.adjuntar_plano)  # Botón Adjuntar
         
-        self.inicializar_db()
-        
-        # Si hay un ID de pedido, cargar los datos
         if self.pedido_id:
             self.cargar_pedido()
     
-    def inicializar_db(self):
-        self.db = Database()
-        self.conn = self.db.connect()
-
-        if self.conn:
-            print("✅ Conexión exitosa a la base de datos")
-        else:
-            print("❌ No se pudo conectar a la base de datos")
-    
     def cargar_pedido(self):
-        if not self.conn:
-            print("Error: No hay conexión a la base de datos")
-            return
-            
-        cursor = self.conn.cursor()
-        cursor.execute("""
-            SELECT cliente_nombre, estado, fecha_medicion, presupuesto, 
-                   fecha_llegada_materiales, fecha_entrega, notas
-            FROM pedidos 
-            WHERE id = ?
-        """, (self.pedido_id,))
+        pedido = ApiService.get_pedido(self.pedido_id)
         
-        resultado = cursor.fetchone()
-        
-        if resultado:
-            # Desempaquetar los resultados
-            cliente, etapa, fecha_medicion, presupuesto, fecha_materiales, fecha_entrega, notas = resultado
-            
+        if pedido:
             # Establecer los valores en los widgets
-            self.ui.Cliente.setText(cliente)
-            self.ui.comboBox.setCurrentText(etapa)
+            self.ui.Cliente.setText(pedido['cliente_nombre'])
+            self.ui.comboBox.setCurrentText(pedido['estado'])
             
             # Convertir strings de fecha a QDate y establecerlos
-            self.ui.dateEdit.setDate(QDate.fromString(fecha_medicion, "yyyy-MM-dd"))
-            self.ui.dateEdit_3.setDate(QDate.fromString(fecha_materiales, "yyyy-MM-dd"))
-            self.ui.dateEdit_2.setDate(QDate.fromString(fecha_entrega, "yyyy-MM-dd"))
+            self.ui.dateEdit.setDate(QDate.fromString(pedido['fecha_medicion'], "yyyy-MM-dd"))
+            self.ui.dateEdit_3.setDate(QDate.fromString(pedido['fecha_llegada_materiales'], "yyyy-MM-dd"))
+            self.ui.dateEdit_2.setDate(QDate.fromString(pedido['fecha_entrega'], "yyyy-MM-dd"))
             
-            self.ui.lineEdit_11.setText(str(presupuesto))
+            self.ui.lineEdit_11.setText(str(pedido['presupuesto']))
             
-            # Establecer las notas
-            if notas:
-                self.ui.plainTextEdit.setPlainText(notas)
-        else:
-            print(f"No se encontró el pedido con ID: {self.pedido_id}")
-
+            if pedido['notas']:
+                self.ui.plainTextEdit.setPlainText(pedido['notas'])
+    
     def guardar_cambios(self):
-        # Obtener los valores de los campos
-        cliente = self.ui.Cliente.text()
-        etapa = self.ui.comboBox.currentText()
-        
-        # Obtener las fechas de los QDateEdit
-        fecha_medicion = self.ui.dateEdit.date().toString("yyyy-MM-dd")
-        fecha_materiales = self.ui.dateEdit_3.date().toString("yyyy-MM-dd")
-        fecha_entrega = self.ui.dateEdit_2.date().toString("yyyy-MM-dd")
-        
-        # Obtener el presupuesto y las notas
-        presupuesto = self.ui.lineEdit_11.text()
-        notas = self.ui.plainTextEdit.toPlainText()
-        
         try:
-            cursor = self.conn.cursor()
+            # Validar el presupuesto antes de convertirlo
+            presupuesto_texto = self.ui.lineEdit_11.text()
+            try:
+                presupuesto = float(presupuesto_texto) if presupuesto_texto else 0.0
+            except ValueError:
+                print("Error: El presupuesto debe ser un número válido")
+                return
+
+            datos = {
+                'cliente_nombre': self.ui.Cliente.text(),
+                'estado': self.ui.comboBox.currentText(),
+                'fecha_medicion': self.ui.dateEdit.date().toString("yyyy-MM-dd"),
+                'fecha_llegada_materiales': self.ui.dateEdit_3.date().toString("yyyy-MM-dd"),
+                'fecha_entrega': self.ui.dateEdit_2.date().toString("yyyy-MM-dd"),
+                'presupuesto': presupuesto,
+                'notas': self.ui.plainTextEdit.toPlainText(),
+                'ruta_plano': ''  # Agregamos el campo con un valor vacío
+            }
             
-            if self.pedido_id:  # Actualizar pedido existente
-                cursor.execute("""
-                    UPDATE pedidos 
-                    SET cliente_nombre = ?, 
-                        estado = ?,
-                        fecha_medicion = ?,
-                        presupuesto = ?,
-                        fecha_llegada_materiales = ?,
-                        fecha_entrega = ?,
-                        notas = ?
-                    WHERE id = ?
-                """, (cliente, etapa, fecha_medicion, presupuesto, 
-                      fecha_materiales, fecha_entrega, notas, self.pedido_id))
+            print("Datos a enviar:", datos)
+            
+            if self.pedido_id:
+                # Obtener el pedido actual para mantener la ruta_plano existente
+                pedido_actual = ApiService.get_pedido(self.pedido_id)
+                if pedido_actual and pedido_actual.get('ruta_plano'):
+                    datos['ruta_plano'] = pedido_actual['ruta_plano']
                 
-                self.conn.commit()
-                print(f"✅ Pedido {self.pedido_id} actualizado exitosamente")
-                # Emitir señal de actualización
-                self.pedido_actualizado.emit()
+                response = requests.put(
+                    f"{ApiService.BASE_URL}/pedidos/{self.pedido_id}/",
+                    json=datos
+                )
+                print("Status code:", response.status_code)
+                print("Respuesta del servidor:", response.text)
                 
-            else:  # Crear nuevo pedido
-                cursor.execute("""
-                    INSERT INTO pedidos (
-                        cliente_nombre, estado, fecha_medicion, 
-                        presupuesto, fecha_llegada_materiales, fecha_entrega,
-                        notas
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?)
-                """, (cliente, etapa, fecha_medicion, presupuesto, 
-                      fecha_materiales, fecha_entrega, notas))
+                if response.status_code in [200, 201]:
+                    print(f"✅ Pedido {self.pedido_id} actualizado exitosamente")
+                    self.pedido_actualizado.emit()
+                else:
+                    print(f"❌ Error al actualizar pedido: {response.status_code}")
+                    print("Detalles del error:", response.text)
+            else:
+                response = requests.post(
+                    f"{ApiService.BASE_URL}/pedidos/",
+                    json=datos
+                )
+                print("Status code:", response.status_code)
+                print("Respuesta del servidor:", response.text)
                 
-                self.conn.commit()
-                self.pedido_id = cursor.lastrowid
-                print(f"✅ Nuevo pedido creado con ID: {self.pedido_id}")
-                # Emitir señal de actualización
-                self.pedido_actualizado.emit()
+                if response.status_code in [200, 201]:
+                    resultado = response.json()
+                    self.pedido_id = resultado['id']
+                    print(f"✅ Nuevo pedido creado con ID: {self.pedido_id}")
+                    self.pedido_actualizado.emit()
+                else:
+                    print(f"❌ Error al crear pedido: {response.status_code}")
+                    print("Detalles del error:", response.text)
             
         except Exception as e:
-            print(f"Error al guardar los cambios: {e}")
-            self.conn.rollback()
+            print(f"Error al guardar los cambios: {str(e)}")
 
     def adjuntar_plano(self):
-        # Abrir diálogo para seleccionar archivo
         archivo, _ = QFileDialog.getOpenFileName(
             self,
             "Seleccionar Plano",
@@ -142,46 +114,46 @@ class PedidoController(QMainWindow):
         )
         
         if archivo:
-            # Crear nombre de archivo basado en el ID del pedido
-            extension = os.path.splitext(archivo)[1]
-            nuevo_nombre = f"plano_pedido_{self.pedido_id}{extension}"
-            ruta_destino = os.path.join(self.img_dir, nuevo_nombre)
-            
-            # Copiar archivo a la carpeta de imágenes
             try:
-                shutil.copy2(archivo, ruta_destino)
-                print(f"✅ Plano guardado como: {nuevo_nombre}")
+                # Crear un diccionario con el archivo para enviar
+                with open(archivo, 'rb') as f:
+                    files = {'plano': f}
+                    # Aquí deberías tener un endpoint en tu API para subir archivos
+                    response = requests.post(
+                        f"{ApiService.BASE_URL}/pedidos/{self.pedido_id}/plano/",
+                        files=files
+                    )
                 
-                # Guardar ruta en la base de datos
-                cursor = self.conn.cursor()
-                cursor.execute("""
-                    UPDATE pedidos 
-                    SET ruta_plano = ? 
-                    WHERE id = ?
-                """, (nuevo_nombre, self.pedido_id))
-                self.conn.commit()
-                
+                if response.status_code in [200, 201]:
+                    print("✅ Plano subido exitosamente")
+                    self.pedido_actualizado.emit()
+                else:
+                    print(f"❌ Error al subir el plano: {response.status_code}")
+            
             except Exception as e:
-                print(f"Error al guardar el plano: {e}")
+                print(f"Error al subir el plano: {e}")
     
     def ver_plano(self):
         try:
-            cursor = self.conn.cursor()
-            cursor.execute("SELECT ruta_plano FROM pedidos WHERE id = ?", (self.pedido_id,))
-            resultado = cursor.fetchone()
+            pedido = ApiService.get_pedido(self.pedido_id)
             
-            if resultado and resultado[0]:
-                ruta_plano = os.path.join(self.img_dir, resultado[0])
-                if os.path.exists(ruta_plano):
-                    # Crear una nueva ventana para mostrar la imagen
+            if pedido and pedido.get('ruta_plano'):
+                # Hacer una petición GET a la URL del plano
+                response = requests.get(f"{ApiService.BASE_URL}/planos/{pedido['ruta_plano']}")
+                
+                if response.status_code == 200:
+                    # Crear QPixmap desde los bytes de la imagen
+                    image_data = BytesIO(response.content)
+                    pixmap = QPixmap()
+                    pixmap.loadFromData(image_data.getvalue())
+                    
+                    # Mostrar la imagen
                     self.ventana_imagen = QLabel()
-                    pixmap = QPixmap(ruta_plano)
-                    # Escalar la imagen manteniendo proporción
                     pixmap = pixmap.scaled(800, 600, aspectRatioMode=1)
                     self.ventana_imagen.setPixmap(pixmap)
                     self.ventana_imagen.show()
                 else:
-                    print("No se encontró el archivo del plano")
+                    print("No se pudo obtener el plano del servidor")
             else:
                 print("Este pedido no tiene un plano adjunto")
                 

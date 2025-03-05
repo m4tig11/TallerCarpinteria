@@ -11,6 +11,7 @@ from PyQt5.QtWidgets import (
 from PyQt5.QtCore import Qt
 from ui.Home import Ui_MainWindow
 from db.database import Database
+from services.api_service import ApiService
 
 class TarjetaPedido(QWidget):
     def __init__(self, pedido_data):
@@ -68,11 +69,11 @@ class TarjetaPedido(QWidget):
         separador.setStyleSheet("background-color: #E0E0E0;")
         separador.setFixedHeight(1)
         
-        # Layout para etapa y fecha
+        # Layout para estado y fecha
         layout_info = QHBoxLayout()
         
-        # Etapa actual
-        etapa_label = QLabel(pedido_data['etapa'])
+        # Estado actual (antes era etapa)
+        etapa_label = QLabel(pedido_data['estado'])
         etapa_label.setStyleSheet("""
             font-family: Roboto;
             font-size: 14px;
@@ -82,8 +83,8 @@ class TarjetaPedido(QWidget):
             border-radius: 12px;
         """)
         
-        # Fecha de la etapa
-        fecha_label = QLabel(pedido_data['fecha'])
+        # Fecha de medición como fecha principal
+        fecha_label = QLabel(pedido_data['fecha_medicion'])
         fecha_label.setStyleSheet("""
             font-family: Roboto;
             font-size: 14px;
@@ -179,64 +180,35 @@ class HomeController(QMainWindow):
         return scroll
     
     def cargar_pedidos(self):
-        db = Database()
-        conn = db.connect()
+        # Obtener pedidos desde la API
+        pedidos = ApiService.get_pedidos()
         
-        if conn:
-            try:
-                cursor = conn.cursor()
-                cursor.execute("""
-                    SELECT id, cliente_nombre, estado, fecha_entrega 
-                    FROM pedidos 
-                    ORDER BY fecha_entrega DESC
-                """)
-                
-                pedidos = cursor.fetchall()
-                print("Pedidos encontrados:", pedidos)
-                
-                # Limpiar layouts existentes
-                self.limpiar_layouts()
-                
-                # Crear tarjetas
-                for pedido in pedidos:
-                    print("Procesando pedido:", pedido)
-                    pedido_data = {
-                        'id': pedido[0],
-                        'cliente_nombre': pedido[1],
-                        'etapa': pedido[2],
-                        'fecha': pedido[3] if pedido[3] else 'Sin fecha'
-                    }
-                    print("Datos del pedido:", pedido_data)
-                    
-                    tarjeta = TarjetaPedido(pedido_data)
-                    
-                    # Distribuir según etapa
-                    estado = pedido[2].lower()  # Convertir a minúsculas para comparación
-                    if estado in ['medicion', 'solicitud', 'pendiente']:
-                        print("Agregando a Solicitados")
-                        self.layout_solicitados.addWidget(tarjeta)
-                    elif estado in ['en proceso', 'proceso', 'fabricacion']:
-                        print("Agregando a En proceso")
-                        self.layout_proceso.addWidget(tarjeta)
-                    elif estado in ['entrega', 'para entregar', 'finalizado']:
-                        print("Agregando a Para entregar")
-                        self.layout_entregar.addWidget(tarjeta)
-                    else:
-                        print(f"Estado no reconocido: {estado}")
-                        # Por defecto, agregar a En proceso
-                        self.layout_proceso.addWidget(tarjeta)
-                
-                # Agregar espacio al final de cada columna
-                self.layout_solicitados.addStretch()
-                self.layout_proceso.addStretch()
-                self.layout_entregar.addStretch()
-                
-            except Exception as e:
-                print(f"Error al cargar pedidos: {e}")
-                import traceback
-                print(traceback.format_exc())
-            finally:
-                conn.close()
+        # Limpiar layouts existentes
+        self.limpiar_layouts()
+        
+        # Crear tarjetas
+        for pedido in pedidos:
+            tarjeta = TarjetaPedido(pedido)
+            
+            # Distribuir según etapa
+            estado = pedido['estado'].lower()
+            if estado in ['medicion', 'solicitud', 'pendiente']:
+                print("Agregando a Solicitados")
+                self.layout_solicitados.addWidget(tarjeta)
+            elif estado in ['en proceso', 'proceso', 'fabricacion', 'materiales']:
+                print("Agregando a En proceso")
+                self.layout_proceso.addWidget(tarjeta)
+            elif estado in ['entrega', 'para entregar', 'finalizado']:
+                print("Agregando a Para entregar")
+                self.layout_entregar.addWidget(tarjeta)
+            else:
+                print(f"Estado no reconocido: {estado}")
+                self.layout_proceso.addWidget(tarjeta)
+        
+        # Agregar espacio al final de cada columna
+        self.layout_solicitados.addStretch()
+        self.layout_proceso.addStretch()
+        self.layout_entregar.addStretch()
     
     def limpiar_layouts(self):
         for layout in [self.layout_solicitados, self.layout_proceso, self.layout_entregar]:
