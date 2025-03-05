@@ -122,6 +122,10 @@ class TarjetaPedido(QWidget):
     def abrir_detalles(self, pedido_id):
         from controllers.pedido_controller import PedidoController
         self.ventana_pedido = PedidoController(pedido_id)
+        # Conectar la señal de actualización con el HomeController
+        parent = self.window()
+        if isinstance(parent, HomeController):
+            self.ventana_pedido.pedido_actualizado.connect(parent.cargar_pedidos)
         self.ventana_pedido.show()
 
 class HomeController(QMainWindow):

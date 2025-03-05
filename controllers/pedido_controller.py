@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QMainWindow, QFileDialog, QLabel
-from PyQt5.QtCore import QDate
+from PyQt5.QtCore import QDate, pyqtSignal
 from PyQt5.QtGui import QPixmap
 from ui.ventana_pedido import Ui_MainWindow
 from db.database import Database
@@ -7,6 +7,9 @@ import os
 import shutil
 
 class PedidoController(QMainWindow):
+    # Agregar señal de actualización
+    pedido_actualizado = pyqtSignal()
+    
     def __init__(self, pedido_id=None):
         super().__init__()
         self.ui = Ui_MainWindow()
@@ -106,6 +109,8 @@ class PedidoController(QMainWindow):
                 
                 self.conn.commit()
                 print(f"✅ Pedido {self.pedido_id} actualizado exitosamente")
+                # Emitir señal de actualización
+                self.pedido_actualizado.emit()
                 
             else:  # Crear nuevo pedido
                 cursor.execute("""
@@ -120,6 +125,8 @@ class PedidoController(QMainWindow):
                 self.conn.commit()
                 self.pedido_id = cursor.lastrowid
                 print(f"✅ Nuevo pedido creado con ID: {self.pedido_id}")
+                # Emitir señal de actualización
+                self.pedido_actualizado.emit()
             
         except Exception as e:
             print(f"Error al guardar los cambios: {e}")
