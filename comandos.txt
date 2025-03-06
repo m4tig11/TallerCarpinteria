@@ -1,0 +1,2 @@
+correr el server : python manage.py runserver
+activar el Entorno virtual: .\env\Scripts\activate   

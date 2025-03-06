@@ -23,6 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-&r^8m1n4(s6o=#ah+@++z&7&zj$67a4@p8$cu(!mvv(4lg$dve'
 
 # SECURITY WARNING: don't run with debug turned on in production!
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
 DEBUG = True
 
 ALLOWED_HOSTS = []
@@ -37,7 +40,9 @@ REST_FRAMEWORK = {
 
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
+    'django.contrib.admin',  # <--- Esta línea debe estar presente
+    'rest_framework',
+    'rest_framework_simplejwt',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -45,6 +50,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'pedidos',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

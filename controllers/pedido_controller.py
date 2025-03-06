@@ -19,8 +19,7 @@ class PedidoController(QMainWindow):
         
         # Conectar botones
         self.ui.pushButton_3.clicked.connect(self.guardar_cambios)
-        self.ui.pushButton.clicked.connect(self.ver_plano)      # Botón Ver
-        self.ui.pushButton_2.clicked.connect(self.adjuntar_plano)  # Botón Adjuntar
+        
         
         if self.pedido_id:
             self.cargar_pedido()
@@ -53,6 +52,7 @@ class PedidoController(QMainWindow):
                 print("Error: El presupuesto debe ser un número válido")
                 return
 
+            # Crear un diccionario con los datos del pedido actualizado
             datos = {
                 'cliente_nombre': self.ui.Cliente.text(),
                 'estado': self.ui.comboBox.currentText(),
@@ -61,104 +61,26 @@ class PedidoController(QMainWindow):
                 'fecha_entrega': self.ui.dateEdit_2.date().toString("yyyy-MM-dd"),
                 'presupuesto': presupuesto,
                 'notas': self.ui.plainTextEdit.toPlainText(),
-                'ruta_plano': ''  # Agregamos el campo con un valor vacío
+                'ruta_plano': ''  # Este campo será vacío si no se ha adjuntado un plano
             }
-            
+
             print("Datos a enviar:", datos)
-            
+
             if self.pedido_id:
-                # Obtener el pedido actual para mantener la ruta_plano existente
-                pedido_actual = ApiService.get_pedido(self.pedido_id)
-                if pedido_actual and pedido_actual.get('ruta_plano'):
-                    datos['ruta_plano'] = pedido_actual['ruta_plano']
-                
-                response = requests.put(
-                    f"{ApiService.BASE_URL}/pedidos/{self.pedido_id}/",
-                    json=datos
-                )
-                print("Status code:", response.status_code)
-                print("Respuesta del servidor:", response.text)
-                
-                if response.status_code in [200, 201]:
+                # Llamamos a la función para actualizar el pedido en la API
+                pedido_actualizado = ApiService.actualizar_pedido(self.pedido_id, datos)
+
+                if pedido_actualizado:
                     print(f"✅ Pedido {self.pedido_id} actualizado exitosamente")
-                    self.pedido_actualizado.emit()
+                    self.pedido_actualizado.emit()  # Emitimos la señal para actualizar la vista
                 else:
-                    print(f"❌ Error al actualizar pedido: {response.status_code}")
-                    print("Detalles del error:", response.text)
+                    print(f"❌ Error al actualizar pedido")
             else:
-                response = requests.post(
-                    f"{ApiService.BASE_URL}/pedidos/",
-                    json=datos
-                )
-                print("Status code:", response.status_code)
-                print("Respuesta del servidor:", response.text)
-                
-                if response.status_code in [200, 201]:
-                    resultado = response.json()
-                    self.pedido_id = resultado['id']
-                    print(f"✅ Nuevo pedido creado con ID: {self.pedido_id}")
-                    self.pedido_actualizado.emit()
-                else:
-                    print(f"❌ Error al crear pedido: {response.status_code}")
-                    print("Detalles del error:", response.text)
-            
+                print("No se puede actualizar. Pedido ID no disponible.")
+        
         except Exception as e:
             print(f"Error al guardar los cambios: {str(e)}")
 
-    def adjuntar_plano(self):
-        archivo, _ = QFileDialog.getOpenFileName(
-            self,
-            "Seleccionar Plano",
-            "",
-            "Imágenes (*.png *.jpg *.jpeg *.bmp);;Todos los archivos (*.*)"
-        )
-        
-        if archivo:
-            try:
-                # Crear un diccionario con el archivo para enviar
-                with open(archivo, 'rb') as f:
-                    files = {'plano': f}
-                    # Aquí deberías tener un endpoint en tu API para subir archivos
-                    response = requests.post(
-                        f"{ApiService.BASE_URL}/pedidos/{self.pedido_id}/plano/",
-                        files=files
-                    )
-                
-                if response.status_code in [200, 201]:
-                    print("✅ Plano subido exitosamente")
-                    self.pedido_actualizado.emit()
-                else:
-                    print(f"❌ Error al subir el plano: {response.status_code}")
-            
-            except Exception as e:
-                print(f"Error al subir el plano: {e}")
-    
-    def ver_plano(self):
-        try:
-            pedido = ApiService.get_pedido(self.pedido_id)
-            
-            if pedido and pedido.get('ruta_plano'):
-                # Hacer una petición GET a la URL del plano
-                response = requests.get(f"{ApiService.BASE_URL}/planos/{pedido['ruta_plano']}")
-                
-                if response.status_code == 200:
-                    # Crear QPixmap desde los bytes de la imagen
-                    image_data = BytesIO(response.content)
-                    pixmap = QPixmap()
-                    pixmap.loadFromData(image_data.getvalue())
-                    
-                    # Mostrar la imagen
-                    self.ventana_imagen = QLabel()
-                    pixmap = pixmap.scaled(800, 600, aspectRatioMode=1)
-                    self.ventana_imagen.setPixmap(pixmap)
-                    self.ventana_imagen.show()
-                else:
-                    print("No se pudo obtener el plano del servidor")
-            else:
-                print("Este pedido no tiene un plano adjunto")
-                
-        except Exception as e:
-            print(f"Error al mostrar el plano: {e}")
 
     def __del__(self):
         # Cerrar la conexión cuando se destruye el objeto
