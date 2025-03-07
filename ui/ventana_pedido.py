@@ -399,6 +399,9 @@ class Ui_MainWindow(object):
         self.Cliente.setAlignment(QtCore.Qt.AlignCenter)
         self.Cliente.setObjectName("Cliente")
         self.horizontalLayout.addWidget(self.Cliente)
+        
+        
+        
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)

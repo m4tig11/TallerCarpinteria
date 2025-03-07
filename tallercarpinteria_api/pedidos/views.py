@@ -8,11 +8,17 @@ from rest_framework import viewsets, permissions
 from .models import Pedido
 from .serializers import PedidoSerializer
 
+
 class PedidoViewSet(viewsets.ModelViewSet):
     queryset = Pedido.objects.all()
     serializer_class = PedidoSerializer
 
     permission_classes = [permissions.IsAuthenticated]  # Solo usuarios autenticados pueden usar la API
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
 
     def get_queryset(self):
         return Pedido.objects.filter(usuario=self.request.user)  # Solo muestra los pedidos del usuario autenticado

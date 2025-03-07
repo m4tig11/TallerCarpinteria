@@ -9,7 +9,7 @@ class Pedido(models.Model):
     presupuesto = models.FloatField()
     fecha_llegada_materiales = models.DateField()
     fecha_entrega = models.DateField()
-    plano = models.ImageField(upload_to='planos/', null=True, blank=True)  # Guarda la imagen
+    plano = models.ImageField(upload_to='planos/', null=True, blank=True)
     notas = models.TextField()
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 

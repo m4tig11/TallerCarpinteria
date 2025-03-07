@@ -84,9 +84,33 @@ class Ui_MainWindow(object):
 "    font-size: 24px;\n"
 "    color: #333333; /* Color de texto */\n"
 " border: none;")
-        self.Cliente.setAlignment(QtCore.Qt.AlignCenter)
+        self.Cliente.setAlignment(QtCore.Qt.AlignLeft)
         self.Cliente.setObjectName("Cliente")
         self.horizontalLayout.addWidget(self.Cliente)
+        self.horizontalLayout.addStretch()
+        self.btnNuevoPedido = QtWidgets.QPushButton(self.topPanel)
+        self.btnNuevoPedido.setStyleSheet("""
+            QPushButton {
+                background-color: #28a745;
+                color: white;
+                font-family: "Roboto";
+                font-weight: bold;
+                font-size: 16px;
+                padding: 8px 16px;
+                border-radius: 5px;
+                border: none;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+            }
+            QPushButton:hover {
+                background-color: #218838;
+            }
+            QPushButton:pressed {
+                background-color: #1e7e34;
+            }
+        """)
+        self.btnNuevoPedido.setObjectName("btnNuevoPedido")
+        self.horizontalLayout.addWidget(self.btnNuevoPedido)
         self.pantallaHome = QtWidgets.QFrame(self.centralwidget)
         self.pantallaHome.setGeometry(QtCore.QRect(220, 80, 1061, 641))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
@@ -291,6 +315,7 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.home.setText(_translate("MainWindow", "Home"))
         self.Cliente.setText(_translate("MainWindow", "Taller"))
+        self.btnNuevoPedido.setText(_translate("MainWindow", "Nuevo Pedido"))
         self.label_16.setText(_translate("MainWindow", "Solicitados"))
         self.label_20.setText(_translate("MainWindow", "En proceso"))
         self.label_22.setText(_translate("MainWindow", "Para entregar"))

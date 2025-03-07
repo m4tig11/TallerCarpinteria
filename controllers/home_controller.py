@@ -135,6 +135,9 @@ class HomeController(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         
+        # Conectar el botón Nuevo Pedido
+        self.ui.btnNuevoPedido.clicked.connect(self.nuevo_pedido)
+        
         # Crear contenedores para cada columna
         self.container_solicitados = QWidget(self.ui.pantallaHome)
         self.container_proceso = QWidget(self.ui.pantallaHome)
@@ -216,3 +219,10 @@ class HomeController(QMainWindow):
                 child = layout.takeAt(0)
                 if child.widget():
                     child.widget().deleteLater()
+    
+    def nuevo_pedido(self):
+        from controllers.pedido_controller import PedidoController
+        self.ventana_pedido = PedidoController()  # Sin ID para nuevo pedido
+        # Conectar la señal de actualización
+        self.ventana_pedido.pedido_actualizado.connect(self.cargar_pedidos)
+        self.ventana_pedido.show()
