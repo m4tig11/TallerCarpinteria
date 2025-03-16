@@ -13,8 +13,8 @@ if __name__ == "__main__":
 
 
 #if __name__ == "__main__":
- #   app = QApplication(sys.argv)
-   # ventana = HomeController()
-   # ventana.show()
+#   app = QApplication(sys.argv)
+# ventana = HomeController()
+# ventana.show()
     #sys.exit(app.exec_())
 
