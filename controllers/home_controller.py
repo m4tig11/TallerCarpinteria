@@ -6,12 +6,16 @@ from PyQt5.QtWidgets import (
     QScrollArea, 
     QLabel, 
     QPushButton,
-    QFrame
+    QFrame,
+    QMessageBox
 )
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, pyqtSignal
+from PyQt5.QtGui import QFont
 from ui.Home import Ui_MainWindow
 from db.database import Database
 from services.api_service import ApiService
+from controllers.pedido_controller import PedidoController
+from controllers.calendario_controller import CalendarioController
 
 class TarjetaPedido(QWidget):
     def __init__(self, pedido_data):
@@ -42,7 +46,7 @@ class TarjetaPedido(QWidget):
         # ID del pedido
         id_label = QLabel(f"#{pedido_data['id']}")
         id_label.setStyleSheet("""
-            font-family: Roboto;
+            font-family: Segoe UI;
             font-size: 12px;
             color: #007AFF;
             background-color: #F0F7FF;
@@ -53,7 +57,7 @@ class TarjetaPedido(QWidget):
         # Nombre del cliente
         nombre_label = QLabel(pedido_data['cliente_nombre'])
         nombre_label.setStyleSheet("""
-            font-family: Roboto;
+            font-family: Segoe UI;
             font-weight: bold;
             font-size: 16px;
             color: #1A1A1A;
@@ -72,10 +76,10 @@ class TarjetaPedido(QWidget):
         # Layout para estado y fecha
         layout_info = QHBoxLayout()
         
-        # Estado actual (antes era etapa)
-        etapa_label = QLabel(pedido_data['estado'])
-        etapa_label.setStyleSheet("""
-            font-family: Roboto;
+        # Estado actual
+        estado_label = QLabel(pedido_data['estado'])
+        estado_label.setStyleSheet("""
+            font-family: Segoe UI;
             font-size: 14px;
             color: #333333;
             background-color: #F5F5F5;
@@ -86,12 +90,12 @@ class TarjetaPedido(QWidget):
         # Fecha de medición como fecha principal
         fecha_label = QLabel(pedido_data['fecha_medicion'])
         fecha_label.setStyleSheet("""
-            font-family: Roboto;
+            font-family: Segoe UI;
             font-size: 14px;
             color: #666666;
         """)
         
-        layout_info.addWidget(etapa_label)
+        layout_info.addWidget(estado_label)
         layout_info.addWidget(fecha_label, alignment=Qt.AlignRight)
         
         # Botón Ver Detalles
@@ -100,16 +104,16 @@ class TarjetaPedido(QWidget):
         btn_detalles.setCursor(Qt.PointingHandCursor)
         btn_detalles.setStyleSheet("""
             QPushButton {
-                background-color: #007AFF;
+                background-color: #2e86de;
                 color: white;
                 border-radius: 16px;
-                font-family: Roboto;
+                font-family: Segoe UI;
                 font-size: 13px;
                 font-weight: bold;
                 padding: 0 15px;
             }
             QPushButton:hover {
-                background-color: #0056b3;
+                background-color: #54a0ff;
             }
         """)
         btn_detalles.clicked.connect(lambda: self.abrir_detalles(pedido_data['id']))
@@ -121,7 +125,6 @@ class TarjetaPedido(QWidget):
         layout.addWidget(btn_detalles, alignment=Qt.AlignRight)
     
     def abrir_detalles(self, pedido_id):
-        from controllers.pedido_controller import PedidoController
         self.ventana_pedido = PedidoController(pedido_id)
         # Conectar la señal de actualización con el HomeController
         parent = self.window()
@@ -135,25 +138,16 @@ class HomeController(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         
-        # Conectar el botón Nuevo Pedido
+        # Conectar señales
         self.ui.btnNuevoPedido.clicked.connect(self.nuevo_pedido)
+        self.ui.btnCalendario.clicked.connect(self.abrir_calendario)
         
-        # Crear contenedores para cada columna
-        self.container_solicitados = QWidget(self.ui.pantallaHome)
-        self.container_proceso = QWidget(self.ui.pantallaHome)
-        self.container_entregar = QWidget(self.ui.pantallaHome)
+        # Configurar scroll areas para cada columna
+        self.scroll_solicitados = self.crear_scroll_area(self.ui.container_solicitados)
+        self.scroll_proceso = self.crear_scroll_area(self.ui.container_proceso)
+        self.scroll_entregar = self.crear_scroll_area(self.ui.container_entregar)
         
-        # Establecer geometría
-        self.container_solicitados.setGeometry(50, 140, 300, self.ui.pantallaHome.height() - 160)
-        self.container_proceso.setGeometry(380, 140, 300, self.ui.pantallaHome.height() - 160)
-        self.container_entregar.setGeometry(710, 140, 300, self.ui.pantallaHome.height() - 160)
-        
-        # Configurar scroll areas
-        self.scroll_solicitados = self.crear_scroll_area(self.container_solicitados)
-        self.scroll_proceso = self.crear_scroll_area(self.container_proceso)
-        self.scroll_entregar = self.crear_scroll_area(self.container_entregar)
-        
-        # Crear layouts
+        # Crear layouts para cada scroll area
         self.layout_solicitados = QVBoxLayout(self.scroll_solicitados.widget())
         self.layout_proceso = QVBoxLayout(self.scroll_proceso.widget())
         self.layout_entregar = QVBoxLayout(self.scroll_entregar.widget())
@@ -169,11 +163,30 @@ class HomeController(QMainWindow):
     
     def crear_scroll_area(self, parent):
         scroll = QScrollArea(parent)
-        scroll.setGeometry(0, 0, 300, parent.height())
+        scroll.setGeometry(0, 0, parent.width(), parent.height())
         scroll.setWidgetResizable(True)
         scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        scroll.setStyleSheet("QScrollArea { border: none; background: transparent; }")
+        scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+        scroll.setStyleSheet("""
+            QScrollArea {
+                border: none;
+                background: transparent;
+            }
+            QScrollBar:vertical {
+                border: none;
+                background: #f0f0f0;
+                width: 8px;
+                border-radius: 4px;
+            }
+            QScrollBar::handle:vertical {
+                background: #c0c0c0;
+                border-radius: 4px;
+            }
+            QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+                border: none;
+                background: none;
+            }
+        """)
         
         # Crear y configurar widget contenedor
         content = QWidget()
@@ -183,46 +196,36 @@ class HomeController(QMainWindow):
         return scroll
     
     def cargar_pedidos(self):
-        # Obtener pedidos desde la API
-        pedidos = ApiService.get_pedidos()
-        
-        # Limpiar layouts existentes
-        self.limpiar_layouts()
-        
-        # Crear tarjetas
-        for pedido in pedidos:
-            tarjeta = TarjetaPedido(pedido)
+        try:
+            pedidos = ApiService.get_pedidos()
             
-            # Distribuir según etapa
-            estado = pedido['estado'].lower()
-            if estado in ['medicion', 'solicitud', 'pendiente']:
-                print("Agregando a Solicitados")
-                self.layout_solicitados.addWidget(tarjeta)
-            elif estado in ['en proceso', 'proceso', 'fabricacion', 'materiales']:
-                print("Agregando a En proceso")
-                self.layout_proceso.addWidget(tarjeta)
-            elif estado in ['entrega', 'para entregar', 'finalizado']:
-                print("Agregando a Para entregar")
-                self.layout_entregar.addWidget(tarjeta)
-            else:
-                print(f"Estado no reconocido: {estado}")
-                self.layout_proceso.addWidget(tarjeta)
-        
-        # Agregar espacio al final de cada columna
-        self.layout_solicitados.addStretch()
-        self.layout_proceso.addStretch()
-        self.layout_entregar.addStretch()
-    
-    def limpiar_layouts(self):
-        for layout in [self.layout_solicitados, self.layout_proceso, self.layout_entregar]:
-            while layout.count():
-                child = layout.takeAt(0)
-                if child.widget():
-                    child.widget().deleteLater()
+            # Limpiar los contenedores existentes
+            for layout in [self.layout_solicitados, self.layout_proceso, self.layout_entregar]:
+                while layout.count():
+                    item = layout.takeAt(0)
+                    widget = item.widget()
+                    if widget:
+                        widget.deleteLater()
+            
+            # Distribuir los pedidos según su estado
+            for pedido in pedidos:
+                tarjeta = TarjetaPedido(pedido)
+                if pedido['estado'] == 'Solicitado':
+                    self.layout_solicitados.addWidget(tarjeta)
+                elif pedido['estado'] in ['En proceso', 'Materiales']:
+                    self.layout_proceso.addWidget(tarjeta)
+                elif pedido['estado'] in ['Para entregar', 'Terminado']:
+                    self.layout_entregar.addWidget(tarjeta)
+                
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"Error al cargar los pedidos: {str(e)}")
     
     def nuevo_pedido(self):
-        from controllers.pedido_controller import PedidoController
-        self.ventana_pedido = PedidoController()  # Sin ID para nuevo pedido
-        # Conectar la señal de actualización
-        self.ventana_pedido.pedido_actualizado.connect(self.cargar_pedidos)
-        self.ventana_pedido.show()
+        self.pedido = PedidoController()
+        self.pedido.show()
+        
+    
+    def abrir_calendario(self):
+        self.calendario = CalendarioController()
+        self.calendario.show()
+        self.close()

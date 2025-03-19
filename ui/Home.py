@@ -9,316 +9,168 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QFont, QPixmap
 
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1277, 720)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(MainWindow.sizePolicy().hasHeightForWidth())
-        MainWindow.setSizePolicy(sizePolicy)
+        MainWindow.resize(1400, 900)
+        MainWindow.setMinimumSize(1400, 900)
+        
+        # Widget central
         self.centralwidget = QtWidgets.QWidget(MainWindow)
-        self.centralwidget.setObjectName("centralwidget")
-        self.sidePanel = QtWidgets.QWidget(self.centralwidget)
-        self.sidePanel.setGeometry(QtCore.QRect(1, 1, 221, 721))
-        self.sidePanel.setAutoFillBackground(False)
-        self.sidePanel.setStyleSheet("background-color: #ffffff;\n"
-"")
-        self.sidePanel.setObjectName("sidePanel")
-        self.label_9 = QtWidgets.QLabel(self.sidePanel)
-        self.label_9.setGeometry(QtCore.QRect(60, 20, 81, 81))
-        self.label_9.setStyleSheet("")
-        self.label_9.setText("")
-        self.label_9.setPixmap(QtGui.QPixmap("imagenes/profile_6063734.png"))
-        self.label_9.setScaledContents(True)
-        self.label_9.setObjectName("label_9")
-        self.label_10 = QtWidgets.QLabel(self.sidePanel)
-        self.label_10.setGeometry(QtCore.QRect(213, 303, 861, 861))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.label_10.sizePolicy().hasHeightForWidth())
-        self.label_10.setSizePolicy(sizePolicy)
-        self.label_10.setStyleSheet("")
-        self.label_10.setText("")
-        self.label_10.setPixmap(QtGui.QPixmap(".imagenes/klipartz.com.png"))
-        self.label_10.setScaledContents(True)
-        self.label_10.setObjectName("label_10")
-        self.home = QtWidgets.QPushButton(self.sidePanel)
-        self.home.setGeometry(QtCore.QRect(70, 170, 81, 31))
-        self.home.setStyleSheet("\n"
-"font-family: \"Roboto\";\n"
-"    font-weight: 900; /* Semibold */\n"
-"    font-size: 16px;\n"
-"    color: #333333; /* Color de texto */;\n"
-"border:none")
-        self.home.setObjectName("home")
-        self.label_11 = QtWidgets.QLabel(self.sidePanel)
-        self.label_11.setGeometry(QtCore.QRect(20, 160, 51, 51))
-        self.label_11.setStyleSheet("")
-        self.label_11.setText("")
-        self.label_11.setPixmap(QtGui.QPixmap("imagenes/klipartz.com.png"))
-        self.label_11.setScaledContents(True)
-        self.label_11.setObjectName("label_11")
-        self.topPanel = QtWidgets.QFrame(self.centralwidget)
-        self.topPanel.setGeometry(QtCore.QRect(210, 0, 1071, 81))
-        self.topPanel.setStyleSheet("background-color: #ffffff;\n"
-"")
-        self.topPanel.setFrameShape(QtWidgets.QFrame.StyledPanel)
-        self.topPanel.setFrameShadow(QtWidgets.QFrame.Raised)
-        self.topPanel.setObjectName("topPanel")
-        self.horizontalLayout = QtWidgets.QHBoxLayout(self.topPanel)
-        self.horizontalLayout.setObjectName("horizontalLayout")
-        self.Cliente = QtWidgets.QLineEdit(self.topPanel)
-        font = QtGui.QFont()
-        font.setFamily("Roboto")
-        font.setPointSize(16)
-        font.setBold(True)
-        font.setWeight(99)
-        self.Cliente.setFont(font)
-        self.Cliente.setStyleSheet("    font-family: \"Roboto\";\n"
-"    font-weight: 900; /* Semibold */\n"
-"    font-size: 24px;\n"
-"    color: #333333; /* Color de texto */\n"
-" border: none;")
-        self.Cliente.setAlignment(QtCore.Qt.AlignLeft)
-        self.Cliente.setObjectName("Cliente")
-        self.horizontalLayout.addWidget(self.Cliente)
-        self.horizontalLayout.addStretch()
-        self.btnNuevoPedido = QtWidgets.QPushButton(self.topPanel)
-        self.btnNuevoPedido.setStyleSheet("""
-            QPushButton {
-                background-color: #28a745;
-                color: white;
-                font-family: "Roboto";
-                font-weight: bold;
-                font-size: 16px;
-                padding: 8px 16px;
-                border-radius: 5px;
+        MainWindow.setCentralWidget(self.centralwidget)
+        
+        # Layout principal
+        self.layout_principal = QtWidgets.QHBoxLayout(self.centralwidget)
+        self.layout_principal.setContentsMargins(0, 0, 0, 0)
+        self.layout_principal.setSpacing(0)
+        
+        # Panel lateral
+        self.sidePanel = QtWidgets.QFrame()
+        self.sidePanel.setFixedWidth(300)
+        self.sidePanel.setStyleSheet("""
+            QFrame {
+                background-color: #1e272e;
                 border: none;
-                cursor: pointer;
-                transition: background-color 0.3s ease;
-            }
-            QPushButton:hover {
-                background-color: #218838;
-            }
-            QPushButton:pressed {
-                background-color: #1e7e34;
             }
         """)
-        self.btnNuevoPedido.setObjectName("btnNuevoPedido")
-        self.horizontalLayout.addWidget(self.btnNuevoPedido)
+        
+        self.layout_lateral = QtWidgets.QVBoxLayout(self.sidePanel)
+        self.layout_lateral.setContentsMargins(25, 30, 25, 30)
+        self.layout_lateral.setSpacing(20)
+        
+        # Logo o Icono
+        self.logo = QtWidgets.QLabel()
+        self.logo.setFixedSize(125, 125)
+        pixmap = QPixmap("imagenes/logo/logo.png")
+        pixmap = pixmap.scaled(125, 125, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        self.logo.setPixmap(pixmap)
+        self.logo.setStyleSheet("""
+            QLabel {
+                border-radius: 40px;
+                background-color: transparent;
+            }
+        """)
+        self.layout_lateral.addWidget(self.logo, alignment=Qt.AlignCenter)
+        
+        # Título
+        self.titulo = QtWidgets.QLabel("Taller")
+        self.titulo.setFont(QFont("Segoe UI", 28, QFont.Bold))
+        self.titulo.setStyleSheet("color: white; margin-bottom: 10px;")
+        self.titulo.setAlignment(Qt.AlignCenter)
+        self.layout_lateral.addWidget(self.titulo)
+        
+        # Separador
+        self.separador = QtWidgets.QFrame()
+        self.separador.setFrameShape(QtWidgets.QFrame.HLine)
+        self.separador.setStyleSheet("background-color: #34495e;")
+        self.layout_lateral.addWidget(self.separador)
+        
+        # Botones de navegación
+        self.home = QtWidgets.QPushButton("Home")
+        self.home.setFont(QFont("Segoe UI", 12))
+        self.btnCalendario = QtWidgets.QPushButton("Calendario")
+        self.btnCalendario.setFont(QFont("Segoe UI", 12))
+        
+        for btn in [self.home, self.btnCalendario]:
+            btn.setStyleSheet("""
+                QPushButton {
+                    background-color: #2e86de;
+                    color: white;
+                    border: none;
+                    padding: 12px 20px;
+                    border-radius: 8px;
+                    text-align: center;
+                    font-weight: bold;
+                }
+                QPushButton:hover {
+                    background-color: #54a0ff;
+                }
+            """)
+            self.layout_lateral.addWidget(btn)
+        
+        self.layout_lateral.addStretch()
+        
+        # Botón Nuevo Pedido
+        self.btnNuevoPedido = QtWidgets.QPushButton("Nuevo Pedido")
+        self.btnNuevoPedido.setFont(QFont("Segoe UI", 12, QFont.Bold))
+        self.btnNuevoPedido.setStyleSheet("""
+            QPushButton {
+                background-color: #2ecc71;
+                color: white;
+                border: none;
+                padding: 15px 25px;
+                border-radius: 8px;
+                text-align: center;
+                font-weight: bold;
+                margin-top: 20px;
+            }
+            QPushButton:hover {
+                background-color: #27ae60;
+            }
+        """)
+        self.layout_lateral.addWidget(self.btnNuevoPedido)
+        
+        # Panel principal
         self.pantallaHome = QtWidgets.QFrame(self.centralwidget)
-        self.pantallaHome.setGeometry(QtCore.QRect(220, 80, 1061, 641))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.pantallaHome.sizePolicy().hasHeightForWidth())
-        self.pantallaHome.setSizePolicy(sizePolicy)
-        font = QtGui.QFont()
-        font.setFamily("Roboto")
-        self.pantallaHome.setFont(font)
-        self.pantallaHome.setStyleSheet("background-color: #1697D1;\n"
-"")
-        self.pantallaHome.setFrameShape(QtWidgets.QFrame.StyledPanel)
-        self.pantallaHome.setFrameShadow(QtWidgets.QFrame.Raised)
-        self.pantallaHome.setObjectName("pantallaHome")
-        self.horizontalLayoutWidget = QtWidgets.QWidget(self.pantallaHome)
-        self.horizontalLayoutWidget.setGeometry(QtCore.QRect(0, 40, 1061, 91))
-        self.horizontalLayoutWidget.setObjectName("horizontalLayoutWidget")
-        self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget)
-        self.horizontalLayout_2.setContentsMargins(50, 0, 50, 0)
-        self.horizontalLayout_2.setSpacing(50)
-        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
-        self.horizontalLayout_9 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_9.setSpacing(30)
-        self.horizontalLayout_9.setObjectName("horizontalLayout_9")
-        self.horizontalLayout_10 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_10.setSpacing(0)
-        self.horizontalLayout_10.setObjectName("horizontalLayout_10")
-        self.label_16 = QtWidgets.QLabel(self.horizontalLayoutWidget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.label_16.sizePolicy().hasHeightForWidth())
-        self.label_16.setSizePolicy(sizePolicy)
-        self.label_16.setStyleSheet("QLabel {\n"
-"    background-color: white;\n"
-"    border-top-left-radius: 30px;\n"
-"    border-bottom-left-radius: 30px;\n"
-"    padding: 10px;\n"
-"    border: none;\n"
-"    font-family: \"Roboto\";\n"
-"    font-weight: 900;  /* Semibold */\n"
-"    font-size: 16px;\n"
-"    color: #333333;\n"
-"    position: relative;\n"
-"}\n"
-"\n"
-"\n"
-"")
-        self.label_16.setAlignment(QtCore.Qt.AlignCenter)
-        self.label_16.setObjectName("label_16")
-        self.horizontalLayout_10.addWidget(self.label_16)
-        self.label_17 = QtWidgets.QLabel(self.horizontalLayoutWidget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.label_17.sizePolicy().hasHeightForWidth())
-        self.label_17.setSizePolicy(sizePolicy)
-        self.label_17.setStyleSheet("QLabel {\n"
-"    background-color: white;\n"
-"    border-top-right-radius: 30px;\n"
-"    border-bottom-right-radius: 30px;\n"
-"    padding: 30px;\n"
-"    border: none;\n"
-"    font-family: \"Roboto\";\n"
-"    font-weight: 900;  /* Semibold */\n"
-"    font-size: 16px;\n"
-"    color: #333333;\n"
-
-"    position: relative;\n"
-"}\n"
-"\n"
-"\n"
-"")
-        self.label_17.setText("")
-        self.label_17.setPixmap(QtGui.QPixmap("imagenes/rojo.png"))
-        self.label_17.setScaledContents(False)
-        self.label_17.setAlignment(QtCore.Qt.AlignCenter)
-        self.label_17.setObjectName("label_17")
-        self.horizontalLayout_10.addWidget(self.label_17)
-        self.horizontalLayout_9.addLayout(self.horizontalLayout_10)
-        self.horizontalLayout_12 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_12.setSpacing(0)
-        self.horizontalLayout_12.setObjectName("horizontalLayout_12")
-        self.label_20 = QtWidgets.QLabel(self.horizontalLayoutWidget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.label_20.sizePolicy().hasHeightForWidth())
-        self.label_20.setSizePolicy(sizePolicy)
-        self.label_20.setStyleSheet("QLabel {\n"
-"    background-color: white;\n"
-"    border-top-left-radius: 30px;\n"
-"    border-bottom-left-radius: 30px;\n"
-"    padding: 10px;\n"
-"    border: none;\n"
-"    font-family: \"Roboto\";\n"
-"    font-weight: 900;  /* Semibold */\n"
-"    font-size: 16px;\n"
-"    color: #333333;\n"
-
-"    position: relative;\n"
-"}\n"
-"\n"
-"\n"
-"")
-        self.label_20.setAlignment(QtCore.Qt.AlignCenter)
-        self.label_20.setObjectName("label_20")
-        self.horizontalLayout_12.addWidget(self.label_20)
-        self.label_21 = QtWidgets.QLabel(self.horizontalLayoutWidget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.label_21.sizePolicy().hasHeightForWidth())
-        self.label_21.setSizePolicy(sizePolicy)
-        self.label_21.setStyleSheet("QLabel {\n"
-"    background-color: white;\n"
-"    border-top-right-radius: 30px;\n"
-"    border-bottom-right-radius: 30px;\n"
-"    padding: 30px;\n"
-"    border: none;\n"
-"    font-family: \"Roboto\";\n"
-"    font-weight: 900;  /* Semibold */\n"
-"    font-size: 16px;\n"
-"    color: #333333;\n"
-
-"    position: relative;\n"
-"}\n"
-"\n"
-"\n"
-"")
-        self.label_21.setText("")
-        self.label_21.setPixmap(QtGui.QPixmap("imagenes/amarillo.png"))
-        self.label_21.setAlignment(QtCore.Qt.AlignCenter)
-        self.label_21.setObjectName("label_21")
-        self.horizontalLayout_12.addWidget(self.label_21)
-        self.horizontalLayout_9.addLayout(self.horizontalLayout_12)
-        self.horizontalLayout_13 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_13.setSpacing(0)
-        self.horizontalLayout_13.setObjectName("horizontalLayout_13")
-        self.label_22 = QtWidgets.QLabel(self.horizontalLayoutWidget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.label_22.sizePolicy().hasHeightForWidth())
-        self.label_22.setSizePolicy(sizePolicy)
-        self.label_22.setStyleSheet("QLabel {\n"
-"    background-color: white;\n"
-"    border-top-left-radius: 30px;\n"
-"    border-bottom-left-radius: 30px;\n"
-"    padding: 10px;\n"
-"    border: none;\n"
-"    font-family: \"Roboto\";\n"
-"    font-weight: 900;  /* Semibold */\n"
-"    font-size: 16px;\n"
-"    color: #333333;\n"
-
-"    position: relative;\n"
-"}\n"
-"\n"
-"\n"
-"")
-        self.label_22.setAlignment(QtCore.Qt.AlignCenter)
-        self.label_22.setObjectName("label_22")
-        self.horizontalLayout_13.addWidget(self.label_22)
-        self.label_23 = QtWidgets.QLabel(self.horizontalLayoutWidget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.label_23.sizePolicy().hasHeightForWidth())
-        self.label_23.setSizePolicy(sizePolicy)
-        self.label_23.setStyleSheet("QLabel {\n"
-"    background-color: white;\n"
-"    border-top-right-radius: 30px;\n"
-"    border-bottom-right-radius: 30px;\n"
-"    padding: 30px;\n"
-"    border: none;\n"
-"    font-family: \"Roboto\";\n"
-"    font-weight: 900;  /* Semibold */\n"
-"    font-size: 16px;\n"
-"    color: #333333;\n"
-
-"    position: relative;\n"
-"}\n"
-"\n"
-"\n"
-"")
-        self.label_23.setText("")
-        self.label_23.setPixmap(QtGui.QPixmap("imagenes/verde.png"))
-        self.label_23.setAlignment(QtCore.Qt.AlignCenter)
-        self.label_23.setObjectName("label_23")
-        self.horizontalLayout_13.addWidget(self.label_23)
-        self.horizontalLayout_9.addLayout(self.horizontalLayout_13)
-        self.horizontalLayout_2.addLayout(self.horizontalLayout_9)
-        MainWindow.setCentralWidget(self.centralwidget)
+        self.pantallaHome.setStyleSheet("""
+            QFrame {
+                background-color: #1697D1;
+            }
+        """)
+        
+        # Crear los tres contenedores
+        self.container_solicitados = QtWidgets.QWidget(self.pantallaHome)
+        self.container_proceso = QtWidgets.QWidget(self.pantallaHome)
+        self.container_entregar = QtWidgets.QWidget(self.pantallaHome)
+        
+        # Establecer geometría de los contenedores
+        self.container_solicitados.setGeometry(50, 140, 300, 500)
+        self.container_proceso.setGeometry(380, 140, 300, 500)
+        self.container_entregar.setGeometry(710, 140, 300, 500)
+        
+        # Títulos de las columnas
+        self.label_solicitados = QtWidgets.QLabel("Solicitados", self.pantallaHome)
+        self.label_proceso = QtWidgets.QLabel("En Proceso", self.pantallaHome)
+        self.label_entregar = QtWidgets.QLabel("Para Entregar", self.pantallaHome)
+        
+        # Configurar estilo y posición de los títulos
+        titulo_style = """
+            QLabel {
+                color: white;
+                font-family: Segoe UI;
+                font-size: 20px;
+                font-weight: bold;
+                background-color: rgba(255, 255, 255, 0.1);
+                padding: 10px 20px;
+                border-radius: 10px;
+            }
+        """
+        
+        for label, x in [(self.label_solicitados, 50), 
+                        (self.label_proceso, 380), 
+                        (self.label_entregar, 710)]:
+            label.setGeometry(x, 80, 300, 45)
+            label.setAlignment(Qt.AlignCenter)
+            label.setStyleSheet(titulo_style)
+        
+        # Agregar los paneles al layout principal
+        self.layout_principal.addWidget(self.sidePanel)
+        self.layout_principal.addWidget(self.pantallaHome)
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Taller de Carpintería"))
+        self.titulo.setText(_translate("MainWindow", "Taller"))
         self.home.setText(_translate("MainWindow", "Home"))
-        self.Cliente.setText(_translate("MainWindow", "Taller"))
+        self.btnCalendario.setText(_translate("MainWindow", "Calendario"))
         self.btnNuevoPedido.setText(_translate("MainWindow", "Nuevo Pedido"))
-        self.label_16.setText(_translate("MainWindow", "Solicitados"))
-        self.label_20.setText(_translate("MainWindow", "En proceso"))
-        self.label_22.setText(_translate("MainWindow", "Para entregar"))
 
 
 if __name__ == "__main__":

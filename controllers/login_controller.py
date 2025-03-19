@@ -7,6 +7,7 @@ from PyQt5.QtWidgets import QApplication
 class LoginController:
     def __init__(self, api_service):
         self.api_service = api_service
+        self.ventana_home = None
 
     def mostrar_login(self):
         # Aquí mostrarías el formulario para que el usuario ingrese sus datos
@@ -30,8 +31,6 @@ class LoginController:
     def redirigir_a_home(self):
         # Lógica para redirigir a la pantalla principal (Home)
         print("Bienvenido a la página principal!")
-        app = QApplication(sys.argv)
-        ventana = home_controller.HomeController()
-        ventana.show()
-        sys.exit(app.exec_())
+        self.ventana_home = home_controller.HomeController()
+        self.ventana_home.show()
 

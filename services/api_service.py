@@ -194,7 +194,13 @@ class ApiService:
     @staticmethod
     def crear_pedido(datos):
         try:
+            # Verificar si tenemos un token válido
+            if not ApiService.ACCESS_TOKEN:
+                print("❌ No hay token de acceso. Debes iniciar sesión primero.")
+                return None
+
             headers = ApiService.get_auth_headers()
+            print(f"🔑 Headers de autenticación: {headers}")  # Debug
             
             # Si hay archivos (como el plano), usar data en lugar de json
             if 'files' in datos:
@@ -206,11 +212,15 @@ class ApiService:
                     headers=headers
                 )
             else:
+                print(f"📦 Enviando datos: {datos}")  # Debug
                 response = requests.post(
                     f"{ApiService.BASE_URL}/pedidos/",
                     json=datos,
                     headers=headers
                 )
+            
+            print(f"📡 Código de respuesta: {response.status_code}")  # Debug
+            print(f"📥 Respuesta del servidor: {response.text}")  # Debug
             
             # Si el token expiró, intentar refrescarlo y reintentar la petición
             if response.status_code == 401:
@@ -219,6 +229,8 @@ class ApiService:
                 
                 if new_token:
                     headers = ApiService.get_auth_headers()
+                    print(f"🔄 Nuevos headers después del refresh: {headers}")  # Debug
+                    
                     if 'files' in datos:
                         response = requests.post(
                             f"{ApiService.BASE_URL}/pedidos/",
@@ -232,14 +244,21 @@ class ApiService:
                             json=datos,
                             headers=headers
                         )
+                    
+                    print(f"📡 Código de respuesta después del refresh: {response.status_code}")  # Debug
+                    print(f"📥 Respuesta del servidor después del refresh: {response.text}")  # Debug
+                else:
+                    print("❌ No se pudo refrescar el token. Debes iniciar sesión nuevamente.")
+                    return None
             
             if response.status_code in [200, 201]:
+                print("✅ Pedido creado correctamente")
                 return response.json()
             else:
-                print(f"Error al crear pedido: {response.status_code}")
-                print(f"Respuesta del servidor: {response.text}")
+                print(f"❌ Error al crear pedido: {response.status_code}")
+                print(f"📥 Respuesta del servidor: {response.text}")
                 return None
             
         except Exception as e:
-            print(f"Error en la conexión con la API: {e}")
+            print(f"❌ Error en la conexión con la API: {e}")
             return None

@@ -9,424 +9,233 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QFont
 
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1278, 720)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(MainWindow.sizePolicy().hasHeightForWidth())
-        MainWindow.setSizePolicy(sizePolicy)
+        MainWindow.resize(900, 700)
+        MainWindow.setMinimumSize(900, 700)
+        MainWindow.setWindowFlags(Qt.Window | Qt.WindowCloseButtonHint | Qt.WindowMinimizeButtonHint)
+        
+        # Widget central
         self.centralwidget = QtWidgets.QWidget(MainWindow)
-        self.centralwidget.setObjectName("centralwidget")
-        self.sidePanel = QtWidgets.QWidget(self.centralwidget)
-        self.sidePanel.setGeometry(QtCore.QRect(-1, -1, 221, 721))
-        self.sidePanel.setAutoFillBackground(False)
-        self.sidePanel.setStyleSheet("background-color: #ffffff;\n"
-"")
-        self.sidePanel.setObjectName("sidePanel")
-        self.label_9 = QtWidgets.QLabel(self.sidePanel)
-        self.label_9.setGeometry(QtCore.QRect(60, 20, 81, 81))
-        self.label_9.setStyleSheet("")
-        self.label_9.setText("")
-        self.label_9.setPixmap(QtGui.QPixmap("imagenes/profile_6063734.png"))
-        self.label_9.setScaledContents(True)
-        self.label_9.setObjectName("label_9")
-        self.label_10 = QtWidgets.QLabel(self.sidePanel)
-        self.label_10.setGeometry(QtCore.QRect(213, 303, 861, 861))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.label_10.sizePolicy().hasHeightForWidth())
-        self.label_10.setSizePolicy(sizePolicy)
-        self.label_10.setStyleSheet("")
-        self.label_10.setText("")
-        self.label_10.setPixmap(QtGui.QPixmap("imagenes/klipartz.com.png"))
-        self.label_10.setScaledContents(True)
-        self.label_10.setObjectName("label_10")
-        self.home = QtWidgets.QPushButton(self.sidePanel)
-        self.home.setGeometry(QtCore.QRect(70, 170, 81, 31))
-        self.home.setStyleSheet("\n"
-"font-family: \"Roboto\";\n"
-"    font-weight: 900; /* Semibold */\n"
-"    font-size: 16px;\n"
-"    color: #333333; /* Color de texto */;\n"
-"border:none")
-        self.home.setObjectName("home")
-        self.label_11 = QtWidgets.QLabel(self.sidePanel)
-        self.label_11.setGeometry(QtCore.QRect(20, 160, 51, 51))
-        self.label_11.setStyleSheet("")
-        self.label_11.setText("")
-        self.label_11.setPixmap(QtGui.QPixmap("imagenes/klipartz.com.png"))
-        self.label_11.setScaledContents(True)
-        self.label_11.setObjectName("label_11")
-        self.pantallaHome = QtWidgets.QFrame(self.centralwidget)
-        self.pantallaHome.setGeometry(QtCore.QRect(219, 79, 1061, 641))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.pantallaHome.sizePolicy().hasHeightForWidth())
-        self.pantallaHome.setSizePolicy(sizePolicy)
-        font = QtGui.QFont()
-        font.setFamily("Roboto")
-        self.pantallaHome.setFont(font)
-        self.pantallaHome.setStyleSheet("background-color: #1697D1;\n"
-"")
-        self.pantallaHome.setFrameShape(QtWidgets.QFrame.StyledPanel)
-        self.pantallaHome.setFrameShadow(QtWidgets.QFrame.Raised)
-        self.pantallaHome.setObjectName("pantallaHome")
-        self.horizontalLayoutWidget = QtWidgets.QWidget(self.pantallaHome)
-        self.horizontalLayoutWidget.setGeometry(QtCore.QRect(-1, -1, 1071, 331))
-        self.horizontalLayoutWidget.setObjectName("horizontalLayoutWidget")
-        self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget)
-        self.horizontalLayout_2.setContentsMargins(40, 0, 40, 0)
-        self.horizontalLayout_2.setSpacing(0)
-        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
-        self.Medicion = QtWidgets.QFrame(self.horizontalLayoutWidget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Expanding)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.Medicion.sizePolicy().hasHeightForWidth())
-        self.Medicion.setSizePolicy(sizePolicy)
-        font = QtGui.QFont()
-        font.setFamily("Roboto")
-        self.Medicion.setFont(font)
-        self.Medicion.setStyleSheet("background-color: #ffffff;\n"
-"")
-        self.Medicion.setFrameShape(QtWidgets.QFrame.StyledPanel)
-        self.Medicion.setFrameShadow(QtWidgets.QFrame.Raised)
-        self.Medicion.setObjectName("Medicion")
-        self.comboBox = QtWidgets.QComboBox(self.Medicion)
-        self.comboBox.setGeometry(QtCore.QRect(450, 0, 181, 22))
-        self.comboBox.setStyleSheet("border:none\n"
-"\n"
-"")
-        self.comboBox.setEditable(False)
-        self.comboBox.setMaxCount(2147483640)
-        self.comboBox.setModelColumn(0)
-        self.comboBox.setObjectName("comboBox")
-        self.comboBox.addItem("")
-        self.comboBox.addItem("")
-        self.comboBox.addItem("")
-        self.comboBox.addItem("")
-        self.comboBox.addItem("")
-        self.label = QtWidgets.QLabel(self.Medicion)
-        self.label.setGeometry(QtCore.QRect(380, 0, 61, 21))
-        font = QtGui.QFont()
-        font.setFamily("Roboto")
-        font.setPointSize(-1)
-        font.setBold(True)
-        font.setWeight(99)
-        self.label.setFont(font)
-        self.label.setStyleSheet("QLabel {\n"
-"    font-family: \"Roboto\";\n"
-"    font-weight: 900; /* Semibold */\n"
-"    font-size: 16px;\n"
-"    color: #333333; /* Color de texto */\n"
-"}\n"
-"")
-        self.label.setObjectName("label")
-        self.verticalLayoutWidget = QtWidgets.QWidget(self.Medicion)
-        self.verticalLayoutWidget.setGeometry(QtCore.QRect(130, 40, 801, 151))
-        self.verticalLayoutWidget.setObjectName("verticalLayoutWidget")
-        self.verticalLayout = QtWidgets.QVBoxLayout(self.verticalLayoutWidget)
-        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
-        self.verticalLayout.setObjectName("verticalLayout")
-        self.horizontalLayout_6 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_6.setSpacing(67)
-        self.horizontalLayout_6.setObjectName("horizontalLayout_6")
-        self.label_4 = QtWidgets.QLabel(self.verticalLayoutWidget)
-        font = QtGui.QFont()
-        font.setFamily("Roboto")
-        font.setPointSize(-1)
-        font.setBold(True)
-        font.setWeight(99)
-        self.label_4.setFont(font)
-        self.label_4.setStyleSheet("QLabel {\n"
-"    font-family: \"Roboto\";\n"
-"    font-weight: 900; /* Semibold */\n"
-"    font-size: 16px;\n"
-"    color: #333333; /* Color de texto */\n"
-"}\n"
-"")
-        self.label_4.setAlignment(QtCore.Qt.AlignCenter)
-        self.label_4.setObjectName("label_4")
-        self.horizontalLayout_6.addWidget(self.label_4)
-        self.label_6 = QtWidgets.QLabel(self.verticalLayoutWidget)
-        font = QtGui.QFont()
-        font.setFamily("Roboto")
-        font.setPointSize(-1)
-        font.setBold(True)
-        font.setWeight(99)
-        self.label_6.setFont(font)
-        self.label_6.setStyleSheet("QLabel {\n"
-"    font-family: \"Roboto\";\n"
-"    font-weight: 900; /* Semibold */\n"
-"    font-size: 16px;\n"
-"    color: #333333; /* Color de texto */\n"
-"}\n"
-"")
-        self.label_6.setAlignment(QtCore.Qt.AlignCenter)
-        self.label_6.setObjectName("label_6")
-        self.horizontalLayout_6.addWidget(self.label_6)
-        self.label_7 = QtWidgets.QLabel(self.verticalLayoutWidget)
-        font = QtGui.QFont()
-        font.setFamily("Roboto")
-        font.setPointSize(-1)
-        font.setBold(True)
-        font.setWeight(99)
-        self.label_7.setFont(font)
-        self.label_7.setStyleSheet("QLabel {\n"
-"    font-family: \"Roboto\";\n"
-"    font-weight: 900; /* Semibold */\n"
-"    font-size: 16px;\n"
-"    color: #333333; /* Color de texto */\n"
-"}\n"
-"")
-        self.label_7.setAlignment(QtCore.Qt.AlignCenter)
-        self.label_7.setObjectName("label_7")
-        self.horizontalLayout_6.addWidget(self.label_7)
-        self.label_5 = QtWidgets.QLabel(self.verticalLayoutWidget)
-        font = QtGui.QFont()
-        font.setFamily("Roboto")
-        font.setPointSize(-1)
-        font.setBold(True)
-        font.setWeight(99)
-        self.label_5.setFont(font)
-        self.label_5.setStyleSheet("QLabel {\n"
-"    font-family: \"Roboto\";\n"
-"    font-weight: 900; /* Semibold */\n"
-"    font-size: 16px;\n"
-"    color: #333333; /* Color de texto */\n"
-"}\n"
-"")
-        self.label_5.setAlignment(QtCore.Qt.AlignCenter)
-        self.label_5.setObjectName("label_5")
-        self.horizontalLayout_6.addWidget(self.label_5)
-        self.verticalLayout.addLayout(self.horizontalLayout_6)
-        self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_3.setContentsMargins(0, 20, -1, 20)
-        self.horizontalLayout_3.setSpacing(67)
-        self.horizontalLayout_3.setObjectName("horizontalLayout_3")
-        self.dateEdit = QtWidgets.QDateEdit(self.verticalLayoutWidget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.dateEdit.sizePolicy().hasHeightForWidth())
-        self.dateEdit.setSizePolicy(sizePolicy)
-        self.dateEdit.setStyleSheet("border:none;\n"
-"backGround-color:#D9D9D9")
-        self.dateEdit.setAlignment(QtCore.Qt.AlignCenter)
-        self.dateEdit.setButtonSymbols(QtWidgets.QAbstractSpinBox.NoButtons)
-        self.dateEdit.setKeyboardTracking(True)
-        self.dateEdit.setObjectName("dateEdit")
-        self.horizontalLayout_3.addWidget(self.dateEdit)
-        self.lineEdit_11 = QtWidgets.QLineEdit(self.verticalLayoutWidget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.lineEdit_11.sizePolicy().hasHeightForWidth())
-        self.lineEdit_11.setSizePolicy(sizePolicy)
-        self.lineEdit_11.setStyleSheet("border:none;\n"
-"backGround-color:#D9D9D9")
-        self.lineEdit_11.setAlignment(QtCore.Qt.AlignCenter)
-        self.lineEdit_11.setObjectName("lineEdit_11")
-        self.horizontalLayout_3.addWidget(self.lineEdit_11)
-        self.dateEdit_3 = QtWidgets.QDateEdit(self.verticalLayoutWidget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.dateEdit_3.sizePolicy().hasHeightForWidth())
-        self.dateEdit_3.setSizePolicy(sizePolicy)
-        self.dateEdit_3.setStyleSheet("border:none;\n"
-"backGround-color:#D9D9D9")
-        self.dateEdit_3.setAlignment(QtCore.Qt.AlignCenter)
-        self.dateEdit_3.setButtonSymbols(QtWidgets.QAbstractSpinBox.NoButtons)
-        self.dateEdit_3.setObjectName("dateEdit_3")
-        self.horizontalLayout_3.addWidget(self.dateEdit_3)
-        self.dateEdit_2 = QtWidgets.QDateEdit(self.verticalLayoutWidget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.dateEdit_2.sizePolicy().hasHeightForWidth())
-        self.dateEdit_2.setSizePolicy(sizePolicy)
-        self.dateEdit_2.setStyleSheet("border:none;\n"
-"backGround-color:#D9D9D9")
-        self.dateEdit_2.setAlignment(QtCore.Qt.AlignCenter)
-        self.dateEdit_2.setButtonSymbols(QtWidgets.QAbstractSpinBox.NoButtons)
-        self.dateEdit_2.setObjectName("dateEdit_2")
-        self.horizontalLayout_3.addWidget(self.dateEdit_2)
-        self.verticalLayout.addLayout(self.horizontalLayout_3)
-        self.label_3 = QtWidgets.QLabel(self.Medicion)
-        self.label_3.setGeometry(QtCore.QRect(930, 50, 51, 51))
-        self.label_3.setStyleSheet("")
-        self.label_3.setText("")
-        self.label_3.setPixmap(QtGui.QPixmap("imagenes/proceso.png"))
-        self.label_3.setScaledContents(True)
-        self.label_3.setObjectName("label_3")
-        self.horizontalLayoutWidget_6 = QtWidgets.QWidget(self.Medicion)
-        self.horizontalLayoutWidget_6.setGeometry(QtCore.QRect(290, 190, 421, 80))
-        self.horizontalLayoutWidget_6.setObjectName("horizontalLayoutWidget_6")
-        self.horizontalLayout_8 = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget_6)
-        self.horizontalLayout_8.setContentsMargins(0, 0, 0, 0)
-        self.horizontalLayout_8.setObjectName("horizontalLayout_8")
-        self.label_8 = QtWidgets.QLabel(self.horizontalLayoutWidget_6)
-        font = QtGui.QFont()
-        font.setFamily("Roboto")
-        font.setPointSize(-1)
-        font.setBold(True)
-        font.setWeight(99)
-        self.label_8.setFont(font)
-        self.label_8.setStyleSheet("QLabel {\n"
-"    font-family: \"Roboto\";\n"
-"    font-weight: 900; /* Semibold */\n"
-"    font-size: 16px;\n"
-"    color: #333333; /* Color de texto */\n"
-"}\n"
-"")
-        self.label_8.setAlignment(QtCore.Qt.AlignCenter)
-        self.label_8.setObjectName("label_8")
-        self.horizontalLayout_8.addWidget(self.label_8)
-        self.pushButton = QtWidgets.QPushButton(self.horizontalLayoutWidget_6)
-        self.pushButton.setStyleSheet("QPushButton {\n"
-"    background-color: #007bff; /* Azul claro */\n"
-"    color: white;\n"
-"    font-size: 16px;\n"
-"    font-weight: bold; /* Fuente más gruesa */\n"
-"    padding: 7px 10px;\n"
-"    border-radius: 5px;\n"
-"    border: none;\n"
-"    cursor: pointer;\n"
-"    transition: background-color 0.3s ease, transform 0.2s ease;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    background-color: #0056b3; /* Azul más oscuro en hover */\n"
-"}\n"
-"\n"
-"QPushButton:pressed {\n"
-"    background-color: #004085; /* Azul más oscuro al presionar */\n"
-"}\n"
-"")
-        self.pushButton.setObjectName("pushButton")
-        self.horizontalLayout_8.addWidget(self.pushButton)
-        self.pushButton_2 = QtWidgets.QPushButton(self.horizontalLayoutWidget_6)
-        font = QtGui.QFont()
-        font.setFamily("Roboto")
-        font.setPointSize(-1)
-        font.setBold(True)
-        font.setWeight(75)
-        self.pushButton_2.setFont(font)
-        self.pushButton_2.setStyleSheet("QPushButton {\n"
-"    background-color: #007bff; /* Azul claro */\n"
-"    color: white;\n"
-"    font-size: 16px;\n"
-"    font-weight: bold; /* Fuente más gruesa */\n"
-"    padding: 7px 10px;\n"
-"    border-radius: 5px;\n"
-"    border: none;\n"
-"    cursor: pointer;\n"
-"    transition: background-color 0.3s ease, transform 0.2s ease;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    background-color: #0056b3; /* Azul más oscuro en hover */\n"
-"}\n"
-"\n"
-"QPushButton:pressed {\n"
-"    background-color: #004085; /* Azul más oscuro al presionar */\n"
-"}\n"
-"")
-        self.pushButton_2.setObjectName("pushButton_2")
-        self.horizontalLayout_8.addWidget(self.pushButton_2)
-        self.pushButton_3 = QtWidgets.QPushButton(self.Medicion)
-        self.pushButton_3.setGeometry(QtCore.QRect(340, 280, 351, 41))
-        font = QtGui.QFont()
-        font.setFamily("Roboto")
-        font.setPointSize(-1)
-        font.setBold(True)
-        font.setWeight(75)
-        self.pushButton_3.setFont(font)
-        self.pushButton_3.setStyleSheet("QPushButton {\n"
-"    background-color: #28a745; /* Verde brillante */\n"
-"    color: white;\n"
-"    font-size: 16px;\n"
-"    padding: 10px 20px;\n"
-"    border-radius: 5px;\n"
-"    border: none;\n"
-"    cursor: pointer;\n"
-"    transition: background-color 0.3s ease, transform 0.2s ease;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    background-color: #218838; /* Verde más oscuro en hover */\n"
-"}\n"
-"\n"
-"QPushButton:pressed {\n"
-"    background-color: #1e7e34; /* Verde más oscuro al presionar */\n"
-"}\n"
-"")
-        self.pushButton_3.setObjectName("pushButton_3")
-        self.horizontalLayout_2.addWidget(self.Medicion)
-        self.plainTextEdit = QtWidgets.QPlainTextEdit(self.pantallaHome)
-        self.plainTextEdit.setGeometry(QtCore.QRect(120, 400, 861, 221))
-        self.plainTextEdit.setStyleSheet("backGround-color:#D9D9D9;")
-        self.plainTextEdit.setObjectName("plainTextEdit")
-        self.topPanel = QtWidgets.QFrame(self.centralwidget)
-        self.topPanel.setGeometry(QtCore.QRect(210, 0, 1071, 81))
-        self.topPanel.setStyleSheet("background-color: #ffffff;\n"
-"")
-        self.topPanel.setFrameShape(QtWidgets.QFrame.StyledPanel)
-        self.topPanel.setFrameShadow(QtWidgets.QFrame.Raised)
-        self.topPanel.setObjectName("topPanel")
-        self.horizontalLayout = QtWidgets.QHBoxLayout(self.topPanel)
-        self.horizontalLayout.setObjectName("horizontalLayout")
-        self.Cliente = QtWidgets.QLineEdit(self.topPanel)
-        font = QtGui.QFont()
-        font.setFamily("Roboto")
-        font.setPointSize(-1)
-        font.setBold(True)
-        font.setWeight(99)
-        self.Cliente.setFont(font)
-        self.Cliente.setStyleSheet("    font-family: \"Roboto\";\n"
-"    font-weight: 900; /* Semibold */\n"
-"    font-size: 24px;\n"
-"    color: #333333; /* Color de texto */\n"
-" border: none;")
-        self.Cliente.setAlignment(QtCore.Qt.AlignCenter)
-        self.Cliente.setObjectName("Cliente")
-        self.horizontalLayout.addWidget(self.Cliente)
-        
-        
-        
+        self.centralwidget.setStyleSheet("""
+            QWidget {
+                background-color: #f5f6fa;
+            }
+        """)
         MainWindow.setCentralWidget(self.centralwidget)
+        
+        # Layout principal
+        self.layout_principal = QtWidgets.QVBoxLayout(self.centralwidget)
+        self.layout_principal.setContentsMargins(30, 30, 30, 30)
+        self.layout_principal.setSpacing(20)
+        
+        # Encabezado
+        self.header = QtWidgets.QFrame()
+        self.header.setStyleSheet("""
+            QFrame {
+                background-color: white;
+                border-radius: 15px;
+            }
+        """)
+        self.header.setMaximumHeight(100)
+        
+        header_layout = QtWidgets.QHBoxLayout(self.header)
+        header_layout.setContentsMargins(20, 0, 20, 0)
+        
+        # Título del pedido
+        self.titulo_pedido = QtWidgets.QLabel("Nuevo Pedido")
+        self.titulo_pedido.setFont(QFont("Segoe UI", 24, QFont.Bold))
+        self.titulo_pedido.setStyleSheet("color: #2c3e50;")
+        header_layout.addWidget(self.titulo_pedido)
+        
+        # Estado del pedido (si es edición)
+        self.estado_pedido = QtWidgets.QComboBox()
+        self.estado_pedido.setFont(QFont("Segoe UI", 12))
+        self.estado_pedido.addItems(["Solicitado", "En proceso", "Materiales", "Para entregar", "Terminado"])
+        self.estado_pedido.setStyleSheet("""
+            QComboBox {
+                background-color: #f8f9fa;
+                border: 2px solid #e9ecef;
+                border-radius: 8px;
+                padding: 8px 15px;
+                min-width: 150px;
+            }
+            QComboBox::drop-down {
+                border: none;
+            }
+            QComboBox::down-arrow {
+                image: url(imagenes/down-arrow.png);
+                width: 12px;
+                height: 12px;
+            }
+            QComboBox QAbstractItemView {
+                background-color: white;
+                selection-background-color: #2e86de;
+                selection-color: white;
+                border: none;
+            }
+        """)
+        header_layout.addWidget(self.estado_pedido, alignment=Qt.AlignRight)
+        
+        self.layout_principal.addWidget(self.header)
+        
+        # Contenido principal
+        self.contenido = QtWidgets.QFrame()
+        self.contenido.setStyleSheet("""
+            QFrame {
+                background-color: white;
+                border-radius: 15px;
+            }
+        """)
+        
+        contenido_layout = QtWidgets.QVBoxLayout(self.contenido)
+        contenido_layout.setContentsMargins(30, 30, 30, 30)
+        contenido_layout.setSpacing(20)
+        
+        # Formulario
+        form_layout = QtWidgets.QFormLayout()
+        form_layout.setSpacing(15)
+        form_layout.setLabelAlignment(Qt.AlignRight)
+        
+        # Estilo para las etiquetas
+        label_style = """
+            QLabel {
+                color: #2c3e50;
+                font-family: Segoe UI;
+                font-size: 14px;
+                font-weight: bold;
+            }
+        """
+        
+        # Estilo para los campos de entrada
+        input_style = """
+            QLineEdit, QDateEdit, QTextEdit {
+                background-color: #f8f9fa;
+                border: 2px solid #e9ecef;
+                border-radius: 8px;
+                padding: 8px;
+                font-family: Segoe UI;
+                font-size: 14px;
+                color: #2c3e50;
+            }
+            QLineEdit:focus, QDateEdit:focus, QTextEdit:focus {
+                border-color: #2e86de;
+            }
+            QDateEdit::drop-down {
+                border: none;
+            }
+            QDateEdit::down-arrow {
+                image: url(imagenes/calendar.png);
+                width: 12px;
+                height: 12px;
+            }
+        """
+        
+        # Cliente
+        self.label_cliente = QtWidgets.QLabel("Cliente:")
+        self.label_cliente.setStyleSheet(label_style)
+        self.input_cliente = QtWidgets.QLineEdit()
+        self.input_cliente.setStyleSheet(input_style)
+        form_layout.addRow(self.label_cliente, self.input_cliente)
+        
+        # Presupuesto
+        self.label_presupuesto = QtWidgets.QLabel("Presupuesto:")
+        self.label_presupuesto.setStyleSheet(label_style)
+        self.input_presupuesto = QtWidgets.QLineEdit()
+        self.input_presupuesto.setStyleSheet(input_style)
+        self.input_presupuesto.setPlaceholderText("0")
+        form_layout.addRow(self.label_presupuesto, self.input_presupuesto)
+        
+        # Fecha de medición
+        self.label_fecha_medicion = QtWidgets.QLabel("Fecha de medición:")
+        self.label_fecha_medicion.setStyleSheet(label_style)
+        self.input_fecha_medicion = QtWidgets.QDateEdit()
+        self.input_fecha_medicion.setStyleSheet(input_style)
+        self.input_fecha_medicion.setCalendarPopup(True)
+        form_layout.addRow(self.label_fecha_medicion, self.input_fecha_medicion)
+        
+        # Fecha de entrega
+        self.label_fecha_entrega = QtWidgets.QLabel("Fecha de entrega:")
+        self.label_fecha_entrega.setStyleSheet(label_style)
+        self.input_fecha_entrega = QtWidgets.QDateEdit()
+        self.input_fecha_entrega.setStyleSheet(input_style)
+        self.input_fecha_entrega.setCalendarPopup(True)
+        form_layout.addRow(self.label_fecha_entrega, self.input_fecha_entrega)
+        
+        # Fecha de llegada de materiales
+        self.label_fecha_materiales = QtWidgets.QLabel("Fecha de materiales:")
+        self.label_fecha_materiales.setStyleSheet(label_style)
+        self.input_fecha_materiales = QtWidgets.QDateEdit()
+        self.input_fecha_materiales.setStyleSheet(input_style)
+        self.input_fecha_materiales.setCalendarPopup(True)
+        form_layout.addRow(self.label_fecha_materiales, self.input_fecha_materiales)
+        
+        # Notas
+        self.label_notas = QtWidgets.QLabel("Notas:")
+        self.label_notas.setStyleSheet(label_style)
+        self.input_notas = QtWidgets.QTextEdit()
+        self.input_notas.setStyleSheet(input_style)
+        self.input_notas.setMinimumHeight(150)
+        self.input_notas.setPlaceholderText("Ingrese aquí la descripción y notas adicionales...")
+        form_layout.addRow(self.label_notas, self.input_notas)
+        
+        contenido_layout.addLayout(form_layout)
+        
+        # Botones de acción
+        self.layout_botones = QtWidgets.QHBoxLayout()
+        self.layout_botones.setSpacing(15)
+        
+        # Botón Cancelar
+        self.btn_cancelar = QtWidgets.QPushButton("Cancelar")
+        self.btn_cancelar.setFont(QFont("Segoe UI", 12))
+        self.btn_cancelar.setStyleSheet("""
+            QPushButton {
+                background-color: #e74c3c;
+                color: white;
+                border: none;
+                padding: 12px 30px;
+                border-radius: 8px;
+                font-weight: bold;
+            }
+            QPushButton:hover {
+                background-color: #c0392b;
+            }
+        """)
+        self.layout_botones.addWidget(self.btn_cancelar)
+        
+        # Botón Guardar
+        self.btn_guardar = QtWidgets.QPushButton("Guardar")
+        self.btn_guardar.setFont(QFont("Segoe UI", 12))
+        self.btn_guardar.setStyleSheet("""
+            QPushButton {
+                background-color: #2ecc71;
+                color: white;
+                border: none;
+                padding: 12px 30px;
+                border-radius: 8px;
+                font-weight: bold;
+            }
+            QPushButton:hover {
+                background-color: #27ae60;
+            }
+        """)
+        self.layout_botones.addWidget(self.btn_guardar)
+        
+        contenido_layout.addLayout(self.layout_botones)
+        self.layout_principal.addWidget(self.contenido)
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.home.setText(_translate("MainWindow", "Home"))
-        self.comboBox.setCurrentText(_translate("MainWindow", "Medicion"))
-        self.comboBox.setItemText(0, _translate("MainWindow", "Medicion"))
-        self.comboBox.setItemText(1, _translate("MainWindow", "Presupuesto"))
-        self.comboBox.setItemText(2, _translate("MainWindow", "Materiales"))
-        self.comboBox.setItemText(3, _translate("MainWindow", "Entrega"))
-        self.comboBox.setItemText(4, _translate("MainWindow", "Terminado"))
-        self.label.setText(_translate("MainWindow", "Etapa"))
-        self.label_4.setText(_translate("MainWindow", "Medicion"))
-        self.label_6.setText(_translate("MainWindow", "Presupuesto"))
-        self.label_7.setText(_translate("MainWindow", "Materiales"))
-        self.label_5.setText(_translate("MainWindow", "Entrega"))
-        self.label_8.setText(_translate("MainWindow", "Planos"))
-        self.pushButton.setText(_translate("MainWindow", "Ver"))
-        self.pushButton_2.setText(_translate("MainWindow", "Adjuntar"))
-        self.pushButton_3.setText(_translate("MainWindow", "Guardar Cambios"))
-        self.Cliente.setText(_translate("MainWindow", "MAXI GRECO"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Pedido"))
+        self.titulo_pedido.setText(_translate("MainWindow", "Nuevo Pedido"))
 
 
 if __name__ == "__main__":
